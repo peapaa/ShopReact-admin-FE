@@ -1,11 +1,11 @@
 import "./DashboardPage.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, Button, theme, Row, Col, Avatar } from "antd";
+import { Layout, Menu, Button, theme, Row, Col, Avatar, message } from "antd";
 import {
   MdAddCircleOutline,
   MdCategory,
@@ -23,16 +23,30 @@ import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
 import Home from "../components/home/Home";
 import AddOrEditCategory from "../components/categories/AddOrEditCategory";
 import ListCategory from "../components/categories/ListCategory";
+import { useDispatch, useSelector } from "react-redux";
+import { setMessage } from "../redux/actions/commonAction";
 const { Header, Sider, Content } = Layout;
 
 const DashboardPage = () => {
   const navigate = useNavigate();
+
   const [marginLeft, setMarginLeft] = useState(200);
   const siteLayoutSize = { marginLeft: marginLeft };
   const [collapsed, setCollapsed] = useState(false);
+
+  const msg = useSelector((state) => state.commonReducer.message);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (msg) {
+      dispatch(setMessage(""));
+      message.success(msg);
+    }
+  }, [msg, dispatch]);
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
   return (
     <Layout>
       <Sider
