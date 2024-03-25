@@ -5,7 +5,7 @@ const initialState = {
   categories: [],
 };
 
-const categoryRudercer = (state = initialState, { type, payload }) => {
+const categoryReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case CATEGORY_SET:
       return { ...state, category: payload };
@@ -17,4 +17,4 @@ const categoryRudercer = (state = initialState, { type, payload }) => {
   }
 };
 
-export default categoryRudercer;
+export default categoryReducer;
