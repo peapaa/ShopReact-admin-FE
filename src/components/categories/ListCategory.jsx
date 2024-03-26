@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import withRouter from "../../helpers/withRouter";
 import ContentHeader from "../common/ContentHeader";
-import { Button, Modal, Space, Table, Tag } from "antd";
+import { Button, Modal, Skeleton, Space, Table, Tag } from "antd";
 import Column from "antd/es/table/Column";
 import { MdOutlineModeEdit, MdDelete } from "react-icons/md";
 import { AiFillExclamationCircle } from "react-icons/ai";
@@ -62,15 +62,27 @@ class ListCategory extends Component {
 
   render() {
     const { navigate } = this.props.router;
-    const { categories } = this.props;
+    const { categories, isLoading } = this.props;
     // console.log(categories);
+    if (isLoading) {
+      return (
+        <>
+          <ContentHeader
+            navigate={navigate}
+            title="List category"
+            className="site-page-header"
+          ></ContentHeader>
+          <Skeleton active />
+        </>
+      );
+    }
     return (
       <div>
         <ContentHeader
           navigate={navigate}
           title="List category"
           className="site-page-header"
-        />
+        ></ContentHeader>
         <Table dataSource={categories} size="small" rowKey="id">
           <Column
             title="Category ID"
@@ -131,6 +143,7 @@ class ListCategory extends Component {
 
 const mapStateToProps = (state) => ({
   categories: state.categoryReducer.categories,
+  isLoading: state.commonReducer.isLoading,
 });
 
 const mapDispatchToProps = {

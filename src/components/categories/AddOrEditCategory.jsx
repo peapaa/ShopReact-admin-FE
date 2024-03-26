@@ -9,10 +9,13 @@ class AddOrEditCategory extends Component {
     console.log(values);
     const { navigate } = this.props.router;
     this.props.insertCategory(values, navigate);
+    // message.success("Category added successfully"); // susscess add category
+    // message.error("Error");
   };
 
   render() {
     const { navigate } = this.props.router;
+    const { isLoading } = this.props;
     return (
       <div>
         <ContentHeader
@@ -44,6 +47,7 @@ class AddOrEditCategory extends Component {
                 htmlType="submit"
                 type="primary"
                 style={{ float: "right" }}
+                loading={isLoading}
               >
                 Save
               </Button>
@@ -57,6 +61,7 @@ class AddOrEditCategory extends Component {
 
 const mapStateToProps = (state) => ({
   category: state.categoryReducer.category,
+  isLoading: state.commonReducer.isLoading,
 });
 
 const mapDispatchToProps = {

@@ -24,7 +24,7 @@ import Home from "../components/home/Home";
 import AddOrEditCategory from "../components/categories/AddOrEditCategory";
 import ListCategory from "../components/categories/ListCategory";
 import { useDispatch, useSelector } from "react-redux";
-import { setMessage } from "../redux/actions/commonAction";
+import { setError, setMessage } from "../redux/actions/commonAction";
 const { Header, Sider, Content } = Layout;
 
 const DashboardPage = () => {
@@ -35,13 +35,19 @@ const DashboardPage = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   const msg = useSelector((state) => state.commonReducer.message);
+  const err = useSelector((state) => state.commonReducer.error);
+
   const dispatch = useDispatch();
   useEffect(() => {
     if (msg) {
       dispatch(setMessage(""));
       message.success(msg);
     }
-  }, [msg, dispatch]);
+    if (err) {
+      dispatch(setError(""));
+      message.error(err);
+    }
+  }, [msg, err]);
 
   const {
     token: { colorBgContainer, borderRadiusLG },
