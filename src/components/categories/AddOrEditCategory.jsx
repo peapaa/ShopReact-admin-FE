@@ -2,20 +2,62 @@ import React, { Component } from "react";
 import withRouter from "../../helpers/withRouter";
 import { Button, Col, Divider, Form, Input, Row, Select } from "antd";
 import ContentHeader from "../common/ContentHeader";
-import { insertCategory } from "./../../redux/actions/categoryActions";
+import {
+  clearCategory,
+  getOneCategory,
+  insertCategory,
+} from "./../../redux/actions/categoryActions";
 import { connect } from "react-redux";
 class AddOrEditCategory extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      category: {
+        id: "",
+        name: "",
+        status: "Visible",
+      },
+    };
+  }
+
+  componentDidMount = () => {
+    const { id } = this.props.router.params;
+    if (id) {
+      this.props.getOneCategory(id);
+    } else {
+      this.props.clearCategory();
+    }
+  };
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.category && prevState.category.id !== nextProps.category.id) {
+      return {
+        ...prevState,
+        category: nextProps.category,
+      };
+    } else if (!nextProps.category) {
+      return {
+        ...prevState,
+        category: {
+          id: "",
+          name: "",
+          status: "Visible",
+        },
+      };
+    }
+    return null;
+  }
   onSubmitForm = (values) => {
     console.log(values);
     const { navigate } = this.props.router;
     this.props.insertCategory(values, navigate);
-    // message.success("Category added successfully"); // susscess add category
-    // message.error("Error");
   };
 
   render() {
     const { navigate } = this.props.router;
     const { isLoading } = this.props;
+    const { category } = this.state;
     return (
       <div>
         <ContentHeader
@@ -23,20 +65,34 @@ class AddOrEditCategory extends Component {
           title="Add new category"
           className="site-page-header"
         />
-        <Form layout="vertical" className="form" onFinish={this.onSubmitForm}>
+        <Form
+          layout="vertical"
+          className="form"
+          onFinish={this.onSubmitForm}
+          key={category.id}
+        >
           <Row>
             <Col md={12}>
-              <Form.Item label="Category ID" name="categoryId">
+              <Form.Item
+                label="Category ID"
+                name="categoryId"
+                initialValue={category.id}
+              >
                 <Input readOnly></Input>
               </Form.Item>
               <Form.Item
                 label="Name"
                 name="name"
+                initialValue={category.name}
                 rules={[{ required: true, min: 2, message: "Please input!" }]}
               >
                 <Input></Input>
               </Form.Item>
-              <Form.Item label="Status" name="status" initialValue={0}>
+              <Form.Item
+                label="Status"
+                name="status"
+                initialValue={category.status === "Visible" ? "0" : "1"}
+              >
                 <Select>
                   <Select.Option value="0">Visible</Select.Option>
                   <Select.Option value="1">In-Visible</Select.Option>
@@ -66,6 +122,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   insertCategory,
+  getOneCategory,
+  clearCategory,
 };
 
 export default withRouter(

@@ -184,7 +184,11 @@ const DashboardPage = () => {
               <Route path="/" element={<Home />}></Route>
               <Route
                 path="/categories/add"
-                element={<AddOrEditCategory />}
+                element={<AddOrEditCategory key="a" />}
+              ></Route>
+              <Route
+                path="/categories/update/:id"
+                element={<AddOrEditCategory key="u" />}
               ></Route>
               <Route path="/categories/list" element={<ListCategory />}></Route>
             </Routes>

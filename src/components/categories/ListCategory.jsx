@@ -8,6 +8,7 @@ import { AiFillExclamationCircle } from "react-icons/ai";
 import { connect } from "react-redux";
 import {
   clearCategoryState,
+  deleteCategory,
   getCategory,
 } from "../../redux/actions/categoryActions";
 class ListCategory extends Component {
@@ -40,10 +41,13 @@ class ListCategory extends Component {
 
   editCategory = (category) => {
     console.log(category);
+    const { navigate } = this.props.router;
+    navigate("/categories/update/" + category.id);
   };
 
   deleteCategory = () => {
     console.log(this.state.category);
+    this.props.deleteCategory(this.state.category.id);
   };
 
   openDeleteConfirmModal = (category) => {
@@ -149,6 +153,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   getCategory,
   clearCategoryState,
+  deleteCategory,
 };
 
 export default withRouter(

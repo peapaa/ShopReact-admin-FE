@@ -1,5 +1,6 @@
 import CategoryService from "../../services/categoryService";
 import {
+  CATEGORIES_DELETE,
   CATEGORIES_SET,
   CATEGORIES_STATE_CLEAR,
   CATEGORY_SET,
@@ -52,6 +53,7 @@ export const insertCategory = (category, navigate) => async (dispatch) => {
 };
 
 export const getCategory = () => async (dispatch) => {
+  // getCategories
   const service = new CategoryService();
   try {
     dispatch({
@@ -85,8 +87,89 @@ export const getCategory = () => async (dispatch) => {
   });
 };
 
+export const deleteCategory = (id) => async (dispatch) => {
+  const service = new CategoryService();
+  try {
+    dispatch({
+      type: COMMON_LOADING_SET,
+      payload: true,
+    });
+    const response = await service.deleteCategory(id);
+    console.log(response);
+    if (response.status === 200) {
+      dispatch({
+        type: CATEGORIES_DELETE,
+        payload: id,
+      });
+      dispatch({
+        type: COMMON_MESSAGE_SET,
+        payload: response.data,
+      });
+    } else {
+      dispatch({
+        type: COMMON_ERROR_SET,
+        payload: response.message,
+      });
+    }
+  } catch (error) {
+    dispatch({
+      type: COMMON_ERROR_SET,
+      payload: error.response.data
+        ? error.response.data.message
+        : error.message,
+    });
+  }
+  dispatch({
+    type: COMMON_LOADING_SET,
+    payload: false,
+  });
+};
+
+export const getOneCategory = (id) => async (dispatch) => {
+  // getCategory
+  const service = new CategoryService();
+  try {
+    console.log("get one category");
+    dispatch({
+      type: COMMON_LOADING_SET,
+      payload: true,
+    });
+    const response = await service.getOneCategory(id);
+    console.log(response);
+    if (response.status === 200) {
+      dispatch({
+        type: CATEGORY_SET,
+        payload: response.data,
+      });
+    } else {
+      dispatch({
+        type: COMMON_ERROR_SET,
+        payload: response.message,
+      });
+    }
+  } catch (error) {
+    dispatch({
+      type: COMMON_ERROR_SET,
+      payload: error.response.data
+        ? error.response.data.message
+        : error.message,
+    });
+  }
+  dispatch({
+    type: COMMON_LOADING_SET,
+    payload: false,
+  });
+};
+
 export const clearCategoryState = () => async (dispatch) => {
   dispatch({
     type: CATEGORIES_STATE_CLEAR,
+  });
+};
+
+export const clearCategory = () => async (dispatch) => {
+  dispatch({
+    type: CATEGORY_SET,
+    payload: { id: "", name: "", status: "Visible" },
   });
 };
