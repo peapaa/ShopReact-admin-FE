@@ -103,10 +103,10 @@ class ListCategory extends Component {
             width={80}
             render={(_, { status }) => {
               let color = "volcano";
-              let name = "In visible";
-              if (status === 0) {
+              let name = "In-visible";
+              if (status === "Visible") {
                 color = "green";
-                name = "visible";
+                name = "Visible";
               }
               return <Tag color={color}>{name}</Tag>;
             }}

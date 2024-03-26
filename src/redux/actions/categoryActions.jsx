@@ -173,3 +173,46 @@ export const clearCategory = () => async (dispatch) => {
     payload: { id: "", name: "", status: "Visible" },
   });
 };
+
+export const updateCategory = (id, category, navigate) => async (dispatch) => {
+  const service = new CategoryService();
+  //   console.log(service);
+  try {
+    console.log("update Category");
+    dispatch({
+      type: COMMON_LOADING_SET,
+      payload: true,
+    });
+
+    const response = await service.updateCategory(id, category);
+    console.log(response);
+    if (response.status === 200) {
+      dispatch({
+        type: CATEGORY_SET,
+        payload: response.data,
+      });
+      dispatch({
+        type: COMMON_MESSAGE_SET,
+        payload: "Category is updated",
+      });
+    } else {
+      dispatch({
+        type: COMMON_ERROR_SET,
+        payload: response.message,
+      });
+    }
+  } catch (error) {
+    console.error("Error: " + error);
+    dispatch({
+      type: COMMON_ERROR_SET,
+      payload: error.response.data
+        ? error.response.data.message
+        : error.message,
+    });
+  }
+  dispatch({
+    type: COMMON_LOADING_SET,
+    payload: false,
+  });
+  navigate("/categories/list");
+};

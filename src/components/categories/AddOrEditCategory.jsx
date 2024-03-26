@@ -6,6 +6,7 @@ import {
   clearCategory,
   getOneCategory,
   insertCategory,
+  updateCategory,
 } from "./../../redux/actions/categoryActions";
 import { connect } from "react-redux";
 class AddOrEditCategory extends Component {
@@ -51,7 +52,12 @@ class AddOrEditCategory extends Component {
   onSubmitForm = (values) => {
     console.log(values);
     const { navigate } = this.props.router;
-    this.props.insertCategory(values, navigate);
+    const { id } = this.state.category;
+    if (!this.state.category.id) {
+      this.props.insertCategory(values, navigate);
+    } else {
+      this.props.updateCategory(id, values, navigate);
+    }
   };
 
   render() {
@@ -70,6 +76,7 @@ class AddOrEditCategory extends Component {
           className="form"
           onFinish={this.onSubmitForm}
           key={category.id}
+          disabled={isLoading}
         >
           <Row>
             <Col md={12}>
@@ -77,6 +84,7 @@ class AddOrEditCategory extends Component {
                 label="Category ID"
                 name="categoryId"
                 initialValue={category.id}
+                hidden={category.id ? false : true}
               >
                 <Input readOnly></Input>
               </Form.Item>
@@ -124,6 +132,7 @@ const mapDispatchToProps = {
   insertCategory,
   getOneCategory,
   clearCategory,
+  updateCategory,
 };
 
 export default withRouter(
